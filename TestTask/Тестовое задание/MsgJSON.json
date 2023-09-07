@@ -18,27 +18,6 @@
 		"New obj value three": "false",
 		"New obj value four": "Hello!"
 	},
-	"Second obj": {
-	
-		"value one": "777",
-		"value two": "24.33",
-		"value three": "true",
-		"value four": "value string",
-		"Array one": [
-			"element array one",
-			"element array two",
-			"element array three",
-			"element array four",
-			"element array fife"
-		],
-		"New obj": {
-	
-			"New obj value one": "333",
-			"New obj value two": "44.63",
-			"New obj value three": "false",
-			"New obj value four": "Hello!"
-		}
-	},
 	"Empty": "null",
 	"Test array": [
 		{"id":"88","pagetitle":"test 88","longtitle":"","description":"описание","alias":"test/id88"},

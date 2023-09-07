@@ -250,7 +250,6 @@ Cmx_obj_t* extract_msg(uint8_t* msg)
 }
 
 
-//!!!Рекурсивное освобождение памяти(Где-то ошибка не хвотило времени отладить) 
 void free_recvalue(Cmx_obj_t* cmx_obj)
 {
 	if (cmx_obj)
@@ -265,7 +264,7 @@ void free_recvalue(Cmx_obj_t* cmx_obj)
 			if (cmx_obj->value)
 			{
 				free(cmx_obj->value);
-				cmx_obj->value = NULL;
+				/*cmx_obj->value = NULL;*/
 			}
 				
 			
@@ -276,12 +275,10 @@ void free_recvalue(Cmx_obj_t* cmx_obj)
 
 void free_obj(Cmx_obj_t* cmx_obj)
 {
-	//free_recvalue(cmx_obj); 
+	free_recvalue(cmx_obj); 
 	if (cmx_obj)
-	{
-		if (cmx_obj->value)
-			free(cmx_obj->value);
 		free(cmx_obj);
-	}
+
+
 	
 }

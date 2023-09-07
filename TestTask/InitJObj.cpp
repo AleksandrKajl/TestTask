@@ -94,12 +94,6 @@ void init_jobj()
 	if (add_value(root_obj, value))				//Добавляем значение в объект
 		std::cout << "Error \"" << value.key << "\"\n";
 
-	//Добавляем root объект в root объект
-	var_value.cmx_obj = *root_obj;
-	value = { CMX_OBJ, "Second obj", var_value };
-	if (add_value(root_obj, value))				//Добавляем значение в объект
-		std::cout << "Error \"" << value.key << "\"\n";
-
 	//Добавляем значение null
 	var_value.null = j_null;
 	value = { J_NULL, "Empty value", var_value };
