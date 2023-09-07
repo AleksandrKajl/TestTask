@@ -22,12 +22,14 @@ enum Type_JObj
 	CMX_OBJ
 };
 
+//Тип состовного объекта
 enum Type_cmxobj
 {
 	ARR = 0,
 	OBJ
 };
 
+//Структура которая описывает объект или массив
 typedef struct Complex_obj
 {
 	uint8_t valCnt = 0;
@@ -59,7 +61,7 @@ typedef struct Value
 Cmx_obj_t* make_cmxobj(Type_cmxobj type, Value_t meaning);
 uint8_t add_value(Cmx_obj_t* cmx_obj, Value_t meaning);
 Cmx_obj_t* find_values(Cmx_obj_t* source_obj, const char* key);
-Value_t find_value(Cmx_obj_t* cmx_obj, const char* key);
+Value_t* find_value(Cmx_obj_t* cmx_obj, const char* key);
 void make_msg(Cmx_obj_t* cmx_obj);
 Cmx_obj_t* extract_msg(uint8_t* msg);
 bool init_msgarr();

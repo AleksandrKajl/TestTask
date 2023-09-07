@@ -1,5 +1,9 @@
 #include "JObj.h"
 
+//Функция для создания объекта или массива
+//1:Тип обекта, 2:Первое значение с которым создасться объект,
+//если тип значения J_NULL то создасться пустой объект
+//Возвращает указатель на созданный объект
 Cmx_obj_t* make_cmxobj(Type_cmxobj type, Value_t meaning)
 {
 	Cmx_obj_t* cmx_obj = (Cmx_obj_t*)malloc(sizeof(Cmx_obj_t));
@@ -14,6 +18,10 @@ Cmx_obj_t* make_cmxobj(Type_cmxobj type, Value_t meaning)
 	return cmx_obj;
 }
 
+//Функция добавления значения в объект
+//1:указатель на объект в который добавляется значение,
+//2:Значение описываемое структурой Value_t
+//В случае успеха возвращает ноль, иначе код ошибки
 uint8_t add_value(Cmx_obj_t* cmx_obj, Value_t meaning)
 {
 	cmx_obj->valCnt++;
@@ -41,7 +49,10 @@ uint8_t add_value(Cmx_obj_t* cmx_obj, Value_t meaning)
 	return DONE;
 }
 
-//Рекурсивный поиск в объекте
+//Рекурсивный поиск в объекте по ключу
+//1:Указатель на объект в котором будет поиск
+//2:строку с ключём значения
+//Возвращает указатель на объект значений с заданным ключом
 Cmx_obj_t* find_values(Cmx_obj_t* source_obj, const char* key)
 {
 	Value_t mean = { J_NULL, NULL, 0 };
@@ -66,22 +77,28 @@ Cmx_obj_t* find_values(Cmx_obj_t* source_obj, const char* key)
 }
 
 //Поиск в объекте по ключу
-Value_t find_value(Cmx_obj_t* cmx_obj, const char* key)
+//1:Указатель на объект в котором будет поиск
+//2:строку с ключём значения
+//Возвращает указатель на значение
+Value_t* find_value(Cmx_obj_t* cmx_obj, const char* key)
 {
 	Value_t mean = { J_NULL, NULL, 0 };
-	Cmx_obj_t* obj = make_cmxobj(ARR, mean);
 
 	for (uint16_t idx = 0; idx < cmx_obj->valCnt; ++idx)
 	{
 		if (cmx_obj->value[idx].key == key)
 		{
-			return cmx_obj->value[idx];
+			return &cmx_obj->value[idx];
 		}
 	}
+	return NULL;
 }
+
 static uint16_t dynamic_arr_sz = 256;
 static uint16_t idx = 0;
 uint8_t* msg_arr = NULL;
+//Функция для выделения памяти под сообщение
+//Возвращает true или false
 bool init_msgarr()
 {
 	msg_arr = (uint8_t*)malloc(dynamic_arr_sz);
@@ -90,6 +107,9 @@ bool init_msgarr()
 	
 	return false;
 }
+
+//Вспомогательная функция добовления значения в массив
+//1:Значение для занесения в массив
 void add_ellement(uint8_t ellem)
 {
 	if(idx < dynamic_arr_sz)
@@ -104,6 +124,10 @@ void add_ellement(uint8_t ellem)
 	}
 }
 
+//Функция для сбора сообщения в массив для передачи
+//Принимает указатель на обект который будет передоваться
+//Сообщение собирается в динамический массив msg_arr
+//Который был создан при вызове функции init_msgarr()
 void make_msg(Cmx_obj_t* cmx_obj)
 {
 	add_ellement(cmx_obj->valCnt);			//Количество значений в объекте
@@ -166,6 +190,9 @@ void make_msg(Cmx_obj_t* cmx_obj)
 	}
 }
 
+//Функция извлечения объекта из сообщения
+//1:Указатель на массив с сообщением
+//Возвращает указатель на объект
 Cmx_obj_t* extract_msg(uint8_t* msg)
 {
 	static uint16_t j = 0;
@@ -249,8 +276,9 @@ Cmx_obj_t* extract_msg(uint8_t* msg)
 	return cmx_obj;
 }
 
-
-void free_recvalue(Cmx_obj_t* cmx_obj)
+//Функция для рекурсивного удаления значений объекта или массива
+//1:Принимает указатель на объект значения которого нужно освободить
+void free_value(Cmx_obj_t* cmx_obj)
 {
 	if (cmx_obj)
 	{
@@ -259,7 +287,7 @@ void free_recvalue(Cmx_obj_t* cmx_obj)
 			for (int idx = cmx_obj->valCnt - 1; idx >= 0 ; --idx)
 			{
 				if (cmx_obj->value[idx].type == CMX_OBJ)
-					free_recvalue(&cmx_obj->value[idx].var_value.cmx_obj);
+					free_value(&cmx_obj->value[idx].var_value.cmx_obj);
 			}
 			if (cmx_obj->value)
 			{
@@ -273,9 +301,11 @@ void free_recvalue(Cmx_obj_t* cmx_obj)
 	}
 }
 
+//Функция для освобождения памяти выделенной под объект или массив
+//Принимает указатель на объект который освобождается
 void free_obj(Cmx_obj_t* cmx_obj)
 {
-	free_recvalue(cmx_obj); 
+	free_value(cmx_obj); 
 	if (cmx_obj)
 		free(cmx_obj);
 

@@ -224,38 +224,42 @@ void init_jobj()
 	if (add_value(test_arr, value))				//Добавляем значение в объект
 		std::cout << "Error \"" << value.key << "\"\n";
 
+	var_value.cmx_obj = *test_arr;
+	value = { CMX_OBJ, "Test array", var_value };
+	if (add_value(root_obj, value))				//Добавляем значение в объект
+		std::cout << "Error \"" << value.key << "\"\n";
+
+//Примеры использования библиотеки=========================================================================
+	//Рекурсивный поиск в объекте значений по ключу
+	Cmx_obj_t* obj = find_values(root_obj, "new obj");
+
 //Задача вывести значение "alias" из массив объектов в объекте которого "id" == "350"
 	{
 		//Перебераем элементы массива
 		for (uint8_t idx = 0; idx < test_arr->valCnt; ++idx)
 		{
 			//Функция возвращает значения из передонного объекта по ключу
-			Value_t mean = find_value(&test_arr->value[idx].var_value.cmx_obj, "id");
+			Value_t* val = find_value(&test_arr->value[idx].var_value.cmx_obj, "id");
 			//Если значения "id" == "350"
-			if (mean.var_value.string == "350")
+			if (val->var_value.string == "350")
 			{
-				//Ищем в этом объекте значение с ключём "alias"
-				mean = find_value(&test_arr->value[idx].var_value.cmx_obj, "alias");
+				//Ищем в этом оBбъекте значение с ключём "alias"
+				val = find_value(&test_arr->value[idx].var_value.cmx_obj, "alias");
 				//Выводим значение
-				printf("\"alias\" field value: %s",mean.var_value.string);
+				printf("\"alias\" field value: %s",val->var_value.string);
 			}
 		}
 	}
-
-	var_value.cmx_obj = *test_arr;
-	value = { CMX_OBJ, "Test array", var_value};
-	if (add_value(root_obj, value))				//Добавляем значение в объект
-		std::cout << "Error \"" << value.key << "\"\n";
-
-	uint16_t size = sizeof(*root_obj);
 	
+//Создание сообщения для передачи
 	init_msgarr();			//Выделяем память под массив сообщения
 	make_msg(root_obj);		//Собираем сообщение
+
+//Извлечение сообщения из массива
 	Cmx_obj_t* my_obj = extract_msg(msg_arr);	//Извлекаем сообщение
 
-	//Рекурсивный поиск в объекте значений по ключу
-	Cmx_obj_t* obj = find_values(root_obj, "Second obj");
-
+//Освобождаем память
 	free_obj(root_obj);
 	free_obj(my_obj);
+	free(msg_arr);
 }
