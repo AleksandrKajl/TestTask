@@ -1,4 +1,4 @@
-#include "InitJObj.h"
+#include "init_jobj.h"
 #include <iostream>
 
 void init_jobj()

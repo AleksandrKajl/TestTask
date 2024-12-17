@@ -1,6 +1,6 @@
 #include <iostream>
-#include "JObj.h"
-#include "InitJObj.h"
+#include "jobj.h"
+#include "init_jobj.h"
 
 int main()
 {

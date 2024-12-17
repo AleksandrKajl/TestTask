@@ -1,4 +1,4 @@
 #pragma once
-#include "JObj.h"
+#include "jobj.h"
 
 void init_jobj();
